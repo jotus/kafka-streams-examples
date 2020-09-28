@@ -1,9 +1,11 @@
 package dev.przechrzta.kafka.model
 
-class RewardAccumulator (
+import java.lang.StringBuilder
+
+data class RewardAccumulator (
 	val customerId: String,
 	val purchaseTotal: Double,
-	rewardsPoints: Int
+	val rewardsPoints: Int
 ) {
 
 	var currentRewardPoints: Int = rewardsPoints
@@ -14,4 +16,13 @@ class RewardAccumulator (
 	fun addRewardPoints(previousTotalPoints: Int) {
 		this.totalRewardPoints += previousTotalPoints
 	}
+
+	companion object {
+		fun fromPurchase(p: Purchase): RewardAccumulator{
+			val total = p.price * p.quantity
+			return RewardAccumulator(StringBuilder(p.lastName).append(",").append(p.firstName).toString(), total, total.toInt() )
+		}
+	}
+
+
 }

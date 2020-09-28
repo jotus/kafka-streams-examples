@@ -15,6 +15,7 @@ data class Purchase(
 	val employeeId: String,
 	val quantity: Int,
 	val price: Double,
+	val purchaseDate: Date,
 	val zipCode: String,
 	val storeId: String
 ) {
