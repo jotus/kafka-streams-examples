@@ -9,10 +9,7 @@ import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.kstream.Consumed
-import org.apache.kafka.streams.kstream.KStream
-import org.apache.kafka.streams.kstream.Printed
-import org.apache.kafka.streams.kstream.Produced
+import org.apache.kafka.streams.kstream.*
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor
 import java.util.*
 
@@ -41,12 +38,35 @@ fun main() {
 	purchasePatternStream.print(Printed.toSysOut<String, PurchasePattern>().withLabel("patterns"))
 	purchasePatternStream.to("patterns", Produced.with(Serdes.String(), purchasePatternsSerde))
 
-	val rewardsStream: KStream<String, RewardAccumulator> = maskedCreditCard.mapValues { p -> RewardAccumulator.fromPurchase(p) }
+	val rewardsStream: KStream<String, RewardAccumulator> =
+		maskedCreditCard.mapValues { p -> RewardAccumulator.fromPurchase(p) }
 
 	rewardsStream.print(Printed.toSysOut<String, RewardAccumulator>().withLabel("rewards"))
 	rewardsStream.to("rewards", Produced.with(Serdes.String(), rewardAccumulatorSerde))
-//		purchaseStream.print(Printed.toSysOut<String, Purchase>().withLabel("purchases"))
-//		purchaseStream.to("purchases", Produced.with(Serdes.String(), purchaseSerde))
+
+	//selecting key
+	val purchaseDayAsKeyMappper = KeyValueMapper { key: String?, purchase: Purchase -> purchase.purchaseDate.time }
+	val filteredKstream: KStream<Long, Purchase> =
+		maskedCreditCard.filter { key: String?, purchase -> purchase.price > 5.00 }
+			.selectKey(purchaseDayAsKeyMappper)
+
+//	//==========FILTERING
+	filteredKstream.print(Printed.toSysOut<Long, Purchase>().withLabel("expensive_purchases"))
+	filteredKstream.to("expensive_purchases", Produced.with(Serdes.Long(), purchaseSerde))
+
+	//==========BRANCHING
+	val isCofee = Predicate { key: String?, value: Purchase -> value.department.equals("coffee", true) }
+	val isElectronics = Predicate { key: String?, value: Purchase -> value.department.equals("electronics", true) }
+	val coffee = 0
+	val electronics = 1
+	val kstreamByDept: Array<KStream<String?, Purchase>> = maskedCreditCard.branch(isCofee, isElectronics)
+
+	kstreamByDept[coffee].print(Printed.toSysOut<String?, Purchase>().withLabel("coffee"))
+	kstreamByDept[coffee].to("coffee", Produced.with(Serdes.String(), purchaseSerde))
+
+	kstreamByDept[electronics].print(Printed.toSysOut<String?, Purchase>().withLabel("electronics"))
+	kstreamByDept[electronics].to("electronics", Produced.with(Serdes.String(), purchaseSerde))
+
 
 	val kafkaStreams = KafkaStreams(builder.build(), config)
 	kafkaStreams.start()
