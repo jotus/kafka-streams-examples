@@ -17,6 +17,9 @@ kafkacat -P -b localhost -t simple-topic
 # Creating topic
 ./kafka-topics.sh --create --topic transactions --zookeeper localhost:2181 --partitions 1 --replication-factor 1
 ./kafka-topics.sh --create --topic patterns --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+./kafka-topics.sh --create --topic rewards --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+./kafka-topics.sh --create --topic customer_trx --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+
 
 ./kafka-topics.sh --create --topic coffee --zookeeper localhost:2181 --partitions 1 --replication-factor 1
 ./kafka-topics.sh --create --topic electronics --zookeeper localhost:2181 --partitions 1 --replication-factor 1
