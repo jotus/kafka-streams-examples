@@ -29,7 +29,6 @@ fun main() {
 	val purchaseSerde = StreamsSerdes.purchaseSerde()
 	val stringSerde = Serdes.String()
 	val intSerde = Serdes.Integer()
-	val purchasePatternsSerde = StreamsSerdes.purchasePatternSerde()
 	val rewardAccumulatorSerde = StreamsSerdes.rewardAccumulatorSerde()
 
 	val builder = StreamsBuilder()
