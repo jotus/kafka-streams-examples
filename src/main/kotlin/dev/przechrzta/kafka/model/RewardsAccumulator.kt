@@ -1,7 +1,5 @@
 package dev.przechrzta.kafka.model
 
-import java.lang.StringBuilder
-
 data class RewardAccumulator (
 	val customerId: String,
 	val purchaseTotal: Double,
@@ -27,5 +25,4 @@ data class RewardAccumulator (
 	override fun toString(): String {
 		return "RewardAccumulator(customerId=$customerId, purchaseTotal=$purchaseTotal, rewardsPoints=$rewardsPoints, totalRewardsPoints=$totalRewardPoints)"
 	}
-
 }

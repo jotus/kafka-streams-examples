@@ -35,10 +35,8 @@ fun main() {
 	val trxStream = builder.stream("transactions", Consumed.with(Serdes.String(), purchaseSerde))
 		.mapValues { p -> p.maskCreditCard() }
 
-
 	trxStream.print(Printed.toSysOut<String, Purchase>().withLabel("purchases"))
 	trxStream.to("purchases", Produced.with(Serdes.String(), purchaseSerde))
-
 
 	val storeName = "rewardsPointsStore"
 	val storeSupplier = Stores.inMemoryKeyValueStore(storeName)
