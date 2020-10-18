@@ -36,23 +36,26 @@ fun main() {
 	val isElectronics = Predicate { key: String?, value: Purchase -> value.department.equals("electronics", true) }
 	val coffee = 0
 	val electronics = 1
-	val branchesStream: Array<KStream<String?, Purchase>> = trxStream.selectKey({ key: String, value: Purchase ->
+	val branchedStream: Array<KStream<String?, Purchase>> = trxStream.selectKey({ key: String, value: Purchase ->
 		value.customerId
 	}).branch(isCofee, isElectronics)
 
-	branchesStream[coffee].print(Printed.toSysOut<String?, Purchase>().withLabel("coffee"))
-	val coffeeStream: KStream<String?, Purchase> = branchesStream[coffee]
-	val electronicsStream: KStream<String?, Purchase> = branchesStream[electronics]
+	branchedStream[coffee].print(Printed.toSysOut<String?, Purchase>().withLabel("coffee"))
+	branchedStream[electronics].print(Printed.toSysOut<String?,Purchase>().withLabel("electro"))
+	val coffeeStream: KStream<String?, Purchase> = branchedStream[coffee]
+	val electronicsStream: KStream<String?, Purchase> = branchedStream[electronics]
 
 	val purchaseJoiner = PurchaseJoiner()
 	val twentyMinutesWindow = JoinWindows.of(60 * 1000 * 20)
 
 	val joinedKStream = coffeeStream.join(
-		electronicsStream, purchaseJoiner, twentyMinutesWindow,
+		electronicsStream,
+		purchaseJoiner,
+		twentyMinutesWindow,
 		Joined.with(stringSerde, purchaseSerde, purchaseSerde)
 	)
 
-	joinedKStream.print(Printed.toSysOut<String, CorrelatedPurchase>().withLabel("joined kstream"))
+	joinedKStream.print(Printed.toSysOut<String, CorrelatedPurchase>().withLabel("correlated"))
 
 	logger.info { "Starting join example" }
 	val kafkaStreams = KafkaStreams(builder.build(), config)
