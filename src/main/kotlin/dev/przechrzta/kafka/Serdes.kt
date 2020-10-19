@@ -9,13 +9,19 @@ import org.apache.kafka.common.serialization.Serializer
 import dev.przechrzta.kafka.model.Purchase
 import dev.przechrzta.kafka.model.PurchasePattern
 import dev.przechrzta.kafka.model.RewardAccumulator
+import dev.przechrzta.kafka.model.StockTickerData
 
 
 object StreamsSerdes {
 	fun purchaseSerde(): Serde<Purchase> = PurchaseSerde()
 	fun purchasePatternSerde(): Serde<PurchasePattern> = PurchasePatternsSerde()
 	fun rewardAccumulatorSerde(): Serde<RewardAccumulator> = RewardAccumulatorSerde()
+	fun stockTicker(): Serde<StockTickerData> = StockTickerSerde()
 }
+
+
+
+class StockTickerSerde : WrapperSerde<StockTickerData>(JsonSerializer(), JsonDeserializer(StockTickerData::class.java))
 
 class PurchaseSerde : WrapperSerde<Purchase>(JsonSerializer(), JsonDeserializer(Purchase::class.java))
 

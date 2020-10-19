@@ -34,5 +34,7 @@ create_topic "patterns"
 create_topic "rewards"
 create_topic "purchases"
 create_topic "customer_trx"
+create_topic "stock-ticker-stream"
+create_topic "stock-ticker-table"
 
 list_topics

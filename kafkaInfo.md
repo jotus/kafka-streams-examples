@@ -10,7 +10,7 @@
 
 
 kafkacat -P -b localhost -t simple-topic
- 
+
 ./kafka-topics.sh --create --topic transactions --bootstrap-server localhost:9092
 ./kafka-topics.sh --describe --topic transactions --bootstrap-server localhost:9092
 
@@ -39,3 +39,5 @@ kafkacat -b localhost:9092 -t transactions -T -P -l /Users/wojciech.przechrzta/m
 kafkacat -b localhost:9092 -t transactions -T -P -l /Users/wojciech.przechrzta/myDevel/kafka_workspace/kafka-examples-master/src/main/resources/purchasesWithDate.json
 ## consuming
 kafkacat -C -b localhost:9092 -t purchases
+kafkacat -b localhost:9092 -t mysql_users -C -c1 -K:
+1   {"uid":1,"name":"Cliff","locale":"en_US","address_city":"St Louis","elite":"P"}
