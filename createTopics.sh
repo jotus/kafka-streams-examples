@@ -36,5 +36,7 @@ create_topic "purchases"
 create_topic "customer_trx"
 create_topic "stock-ticker-stream"
 create_topic "stock-ticker-table"
+create_topic "stock-transactions"
+create_topic "stock-volume-by-company"
 
 list_topics

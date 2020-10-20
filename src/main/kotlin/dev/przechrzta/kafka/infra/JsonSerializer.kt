@@ -2,6 +2,8 @@ package dev.przechrzta.kafka.infra
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dev.przechrzta.kafka.common.FixedSizePriorityQueue
+import dev.przechrzta.kafka.common.FixedSizePriorityQueueAdapter
 import org.apache.kafka.common.serialization.Serializer
 import java.nio.charset.Charset
 
@@ -10,7 +12,7 @@ class JsonSerializer<T> : Serializer<T> {
 
 	init {
 		val builder = GsonBuilder()
-//		builder.registerTypeAdapter(FixedSizePriorityQueue::class.java, FixedSizePriorityQueueAdapter().nullSafe())
+		builder.registerTypeAdapter(FixedSizePriorityQueue::class.java, FixedSizePriorityQueueAdapter().nullSafe())
 		gson = builder.create()
 	}
 

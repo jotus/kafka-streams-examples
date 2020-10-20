@@ -1,15 +1,13 @@
 package dev.przechrzta.kafka
 
+import dev.przechrzta.kafka.common.FixedSizePriorityQueue
 import dev.przechrzta.kafka.infra.JsonDeserializer
 import dev.przechrzta.kafka.infra.JsonSerializer
+import dev.przechrzta.kafka.model.*
 import org.apache.kafka.common.serialization.Serdes.WrapperSerde
 import org.apache.kafka.common.serialization.Deserializer
 import org.apache.kafka.common.serialization.Serde
 import org.apache.kafka.common.serialization.Serializer
-import dev.przechrzta.kafka.model.Purchase
-import dev.przechrzta.kafka.model.PurchasePattern
-import dev.przechrzta.kafka.model.RewardAccumulator
-import dev.przechrzta.kafka.model.StockTickerData
 
 
 object StreamsSerdes {
@@ -17,9 +15,17 @@ object StreamsSerdes {
 	fun purchasePatternSerde(): Serde<PurchasePattern> = PurchasePatternsSerde()
 	fun rewardAccumulatorSerde(): Serde<RewardAccumulator> = RewardAccumulatorSerde()
 	fun stockTicker(): Serde<StockTickerData> = StockTickerSerde()
+	fun stockTransaction(): Serde<StockTransaction> = StockTransactionSerde()
+	fun shareVolume(): Serde<ShareVolume> = ShareVolumeSerde()
+	fun priorityQueue(): Serde<FixedSizePriorityQueue> = FixedSizePriorityQueueSerde()
 }
 
+class FixedSizePriorityQueueSerde : WrapperSerde<FixedSizePriorityQueue>(JsonSerializer(), JsonDeserializer(FixedSizePriorityQueue::class.java))
 
+class ShareVolumeSerde : WrapperSerde<ShareVolume>(JsonSerializer(), JsonDeserializer(ShareVolume::class.java))
+
+
+class StockTransactionSerde: WrapperSerde<StockTransaction>(JsonSerializer(), JsonDeserializer(StockTransaction::class.java))
 
 class StockTickerSerde : WrapperSerde<StockTickerData>(JsonSerializer(), JsonDeserializer(StockTickerData::class.java))
 

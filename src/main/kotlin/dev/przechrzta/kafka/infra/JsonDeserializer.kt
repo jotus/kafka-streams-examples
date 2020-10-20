@@ -2,6 +2,8 @@ package dev.przechrzta.kafka.infra
 
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
+import dev.przechrzta.kafka.common.FixedSizePriorityQueue
+import dev.przechrzta.kafka.common.FixedSizePriorityQueueAdapter
 import org.apache.kafka.common.serialization.Deserializer
 import java.lang.reflect.Type
 
@@ -22,7 +24,7 @@ class JsonDeserializer<T> : Deserializer<T> {
 
 	private fun init() {
 		val builder = GsonBuilder()
-//		builder.registerTypeAdapter(FixedSizePriorityQueue::class.java, FixedSizePriorityQueueAdapter().nullSafe())
+		builder.registerTypeAdapter(FixedSizePriorityQueue::class.java, FixedSizePriorityQueueAdapter().nullSafe())
 		gson = builder.create()
 	}
 
