@@ -6,9 +6,9 @@ data class StockTransaction(
 	val symbol: String,
 	val sector: String,
 	val industry: String,
+	val customerId: String,
 	val shares: Int = 0,
 	val sharePrice: Double = 0.0,
-	val customerId: String? = null,
 	val transactionTimestamp: Date? = null,
 	val purchase: Boolean = false
 ) {

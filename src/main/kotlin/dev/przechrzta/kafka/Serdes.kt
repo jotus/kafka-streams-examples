@@ -18,9 +18,13 @@ object StreamsSerdes {
 	fun stockTransaction(): Serde<StockTransaction> = StockTransactionSerde()
 	fun shareVolume(): Serde<ShareVolume> = ShareVolumeSerde()
 	fun priorityQueue(): Serde<FixedSizePriorityQueue> = FixedSizePriorityQueueSerde()
+	fun transactionSummary(): Serde<TransactionSummary> = TransactionSummarySerde()
 }
 
-class FixedSizePriorityQueueSerde : WrapperSerde<FixedSizePriorityQueue>(JsonSerializer(), JsonDeserializer(FixedSizePriorityQueue::class.java))
+class TransactionSummarySerde : WrapperSerde<TransactionSummary>(JsonSerializer(), JsonDeserializer(TransactionSummary::class.java))
+
+class FixedSizePriorityQueueSerde : WrapperSerde<FixedSizePriorityQueue>(JsonSerializer(),
+	JsonDeserializer(FixedSizePriorityQueue::class.java))
 
 class ShareVolumeSerde : WrapperSerde<ShareVolume>(JsonSerializer(), JsonDeserializer(ShareVolume::class.java))
 

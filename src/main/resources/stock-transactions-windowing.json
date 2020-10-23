@@ -1,0 +1,5 @@
+{"symbol": "AA", "sector": "SEC-A", "industry": "electr", "shares": 10, "sharePrice": 1.2, "customerId": "cust-1", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00" }
+{"symbol": "AA", "sector": "SEC-A", "industry": "electr", "shares": 3, "sharePrice": 2.2, "customerId": "cust-1", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:45.117966+02:00" }
+{"symbol": "BB", "sector": "SEC-B", "industry": "sport", "shares": 10, "sharePrice": 2.2, "customerId": "cust-2", "purchase": false , "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
+{"symbol": "CC", "sector": "SEC-C", "industry": "IT", "shares": 10, "sharePrice": 2.2, "customerId": "cust-3", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
+{"symbol": "CC", "sector": "SEC-C", "industry": "IT", "shares": 5, "sharePrice": 3.2, "customerId": "cust-4", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
