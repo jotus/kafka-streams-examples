@@ -4,7 +4,7 @@ data class TransactionSummary(
 	 val customerId: String,
 	 val stockTicker: String,
 	 val industry: String,
-	 val summaryCount: Long = 0,
+	 var summaryCount: Long = 0,
 	 val customerName: String? = null,
 	 val companyName: String? = null
 ){

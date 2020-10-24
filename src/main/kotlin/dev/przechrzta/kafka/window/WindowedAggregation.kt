@@ -6,16 +6,14 @@ import dev.przechrzta.kafka.model.StockTransaction
 import dev.przechrzta.kafka.model.TransactionSummary
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.KafkaStreams
-import org.apache.kafka.streams.StreamsBuilder
-import org.apache.kafka.streams.StreamsConfig
-import org.apache.kafka.streams.Topology
+import org.apache.kafka.streams.*
 import org.apache.kafka.streams.kstream.*
 import java.time.Duration
 import java.util.*
 
 
 const val STOCK_TRANSACTIONS_TOPIC = "stock-transactions"
+const val FINANCIAL_NEWS = "financial-news"
 
 fun main() {
 	val streamsConfig = StreamsConfig(windowedProps())
@@ -29,16 +27,35 @@ fun main() {
 	val fifteenMinutes: Long = 15 *60 * 1000
 	val fiveSeconds = 5 * 1000
 
-	val  customerTransactionCounts: KTable<Windowed<TransactionSummary>, Long> = builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde,transactionSerde)
+	val  customerTransactionCounts: KTable<Windowed<TransactionSummary>, Long> =
+		builder.stream(STOCK_TRANSACTIONS_TOPIC, Consumed.with(stringSerde,transactionSerde)
 		.withOffsetResetPolicy(Topology.AutoOffsetReset.EARLIEST))
 		.groupBy({ noKey: String?, value: StockTransaction ->
 			TransactionSummary.fromTransaction(value)
 		}, Grouped.with(transactionKeySerde, transactionSerde))
-		.windowedBy(SessionWindows.with(Duration.ofSeconds(twentySec)))
+//		.windowedBy(SessionWindows.with(Duration.ofSeconds(twentySec)))
+		.windowedBy(TimeWindows.of(Duration.ofSeconds(twentySec)))//Tumbling window
 		.count()
 
 	customerTransactionCounts.toStream()
 		.print(Printed.toSysOut<Windowed<TransactionSummary>, Long>().withLabel("trx-summary"))
+
+	//Repartition
+	val countStream: KStream<String, TransactionSummary> =customerTransactionCounts.toStream().map{ window: Windowed<TransactionSummary>, value: Long ->
+		val trxSummary = window.key()
+		val newKey = trxSummary.industry
+		trxSummary.summaryCount = value
+		KeyValue.pair(newKey, trxSummary)
+	}
+
+	val financialNews: KTable<String, String> = builder.table(FINANCIAL_NEWS, Consumed.with(Topology.AutoOffsetReset.EARLIEST))
+	val valueJoiner = ValueJoiner{ txnct: TransactionSummary, news: String? ->
+			"${txnct.summaryCount} shares purchased ${txnct.stockTicker} related news [${news}]"
+	}
+
+	val joinedWithNews: KStream<String, String> = countStream.leftJoin(financialNews, valueJoiner, Joined.with(stringSerde, transactionKeySerde, stringSerde))
+
+	joinedWithNews.print(Printed.toSysOut<String, String>().withLabel("with-news"))
 
 	val kafkaStreams = KafkaStreams(builder.build(), streamsConfig)
 	kafkaStreams.cleanUp()

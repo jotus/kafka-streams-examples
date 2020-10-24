@@ -1,5 +1,13 @@
 {"symbol": "AA", "sector": "SEC-A", "industry": "electr", "shares": 10, "sharePrice": 1.2, "customerId": "cust-1", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00" }
 {"symbol": "AA", "sector": "SEC-A", "industry": "electr", "shares": 3, "sharePrice": 2.2, "customerId": "cust-1", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:45.117966+02:00" }
 {"symbol": "BB", "sector": "SEC-B", "industry": "sport", "shares": 10, "sharePrice": 2.2, "customerId": "cust-2", "purchase": false , "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
-{"symbol": "CC", "sector": "SEC-C", "industry": "IT", "shares": 10, "sharePrice": 2.2, "customerId": "cust-3", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
-{"symbol": "CC", "sector": "SEC-C", "industry": "IT", "shares": 5, "sharePrice": 3.2, "customerId": "cust-4", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
+{"symbol": "CC", "sector": "SEC-C", "industry": "IT", "shares": 10, "sharePrice": 1.0, "customerId": "cust-3", "purchase": false, "transactionTimestamp" : "2020-05-13T11:32:55.117966+02:00"}
+{"symbol": "CC", "customerId": "cust-4", "industry": "IT", "sector": "SEC-C", "transactionTimestamp" : "2020-05-14T11:30:11.117966+02:00","shares": 5, "sharePrice": 1.0, "purchase": false}
+{"symbol": "CC", "customerId": "cust-4", "industry": "IT", "sector": "SEC-C", "transactionTimestamp" : "2020-05-14T11:35:11.117966+02:00","shares": 5, "sharePrice": 1.0, "purchase": false}
+{"symbol": "CC", "customerId": "cust-4", "industry": "IT", "sector": "SEC-C", "transactionTimestamp" : "2020-05-14T11:56:11.117966+02:00","shares": 1, "sharePrice": 1.0, "purchase": false}
+{"symbol": "D", "customerId": "cust-45", "industry": "IT", "sector": "SEC-D", "transactionTimestamp" : "2020-05-14T11:56:01.117966+02:00","shares": 1, "sharePrice": 1.0, "purchase": false}
+{"symbol": "D", "customerId": "cust-45", "industry": "IT", "sector": "SEC-D", "transactionTimestamp" : "2020-05-14T11:56:11.117966+02:00","shares": 1, "sharePrice": 1.0, "purchase": false}
+{"symbol": "D", "customerId": "cust-45", "industry": "IT", "sector": "SEC-D", "transactionTimestamp" : "2020-05-14T11:56:23.117966+02:00","shares": 1, "sharePrice": 1.0, "purchase": false}
+{"symbol": "D", "customerId": "cust-45", "industry": "IT", "sector": "SEC-D", "transactionTimestamp" : "2020-05-14T11:56:33.117966+02:00","shares": 1, "sharePrice": 1.0, "purchase": false}
+{"symbol": "D", "customerId": "cust-45", "industry": "IT", "sector": "SEC-D", "transactionTimestamp" : "2020-05-14T11:56:54.117966+02:00","shares": 1, "sharePrice": 1.0, "purchase": false}
+

@@ -38,5 +38,6 @@ create_topic "stock-ticker-stream"
 create_topic "stock-ticker-table"
 create_topic "stock-transactions"
 create_topic "stock-volume-by-company"
+create_topic "financial-news"
 
 list_topics
