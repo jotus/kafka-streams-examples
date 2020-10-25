@@ -39,5 +39,6 @@ create_topic "stock-ticker-table"
 create_topic "stock-transactions"
 create_topic "stock-volume-by-company"
 create_topic "financial-news"
+create_topic "family-names"
 
 list_topics

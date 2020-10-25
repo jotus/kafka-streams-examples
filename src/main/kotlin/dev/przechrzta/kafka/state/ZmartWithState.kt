@@ -20,10 +20,6 @@ import org.apache.kafka.streams.state.StoreBuilder
 import org.apache.kafka.streams.state.Stores
 import java.util.*
 
-
-private val logger = KotlinLogging.logger {}
-
-
 fun main() {
 	val config = StreamsConfig(getProperties())
 	val purchaseSerde = StreamsSerdes.purchaseSerde()
