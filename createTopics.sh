@@ -40,5 +40,6 @@ create_topic "stock-transactions"
 create_topic "stock-volume-by-company"
 create_topic "financial-news"
 create_topic "family-names"
+create_topic "pops-hops-purchases"
 
 list_topics

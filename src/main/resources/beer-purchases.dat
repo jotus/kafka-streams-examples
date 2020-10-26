@@ -1,0 +1,3 @@
+{ "currency": "EURO", "totalSale": 2.2, "numberCases": 2, "beerType": "stout" }
+{ "currency": "EURO", "totalSale": 3.2, "numberCases": 2, "beerType": "stout" }
+{ "currency": "DOLLAR", "totalSale": 4.2, "numberCases": 2, "beerType": "stout" }
