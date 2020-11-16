@@ -17,7 +17,6 @@ const val STOCK_VOLUME_BY_COMPANY = "stock-volume-by-company"
 private val logger = KotlinLogging.logger {}
 
 fun main() {
-	val streamsConfig = StreamsConfig(aggregationProps())
 	val stringSerde = Serdes.String()
 	val shareVolumeSerde = StreamsSerdes.shareVolume()
 	val transactionSerde = StreamsSerdes.stockTransaction()
@@ -69,7 +68,7 @@ fun main() {
 		aggregatedIndustry.print(Printed.toSysOut<String, String>().withLabel("agg-industry"))
 		aggregatedIndustry.to(STOCK_VOLUME_BY_COMPANY, Produced.with(stringSerde, stringSerde))
 
-	val kafkaStreams = KafkaStreams(builder.build(), streamsConfig)
+	val kafkaStreams = KafkaStreams(builder.build(), aggregationProps())
 	kafkaStreams.cleanUp()
 	kafkaStreams.start()
 
@@ -77,7 +76,6 @@ fun main() {
 	logger.info { "Shutting down kafka streams now" }
 	kafkaStreams.close()
 }
-
 
 fun aggregationProps(): Properties {
 	val props = Properties()

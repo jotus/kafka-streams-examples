@@ -19,6 +19,7 @@ object StreamsSerdes {
 	fun shareVolume(): Serde<ShareVolume> = ShareVolumeSerde()
 	fun priorityQueue(): Serde<FixedSizePriorityQueue> = FixedSizePriorityQueueSerde()
 	fun transactionSummary(): Serde<TransactionSummary> = TransactionSummarySerde()
+	fun stockPerformanceSerde(): Serde<StockPerformance> = StockPerformanceSerde()
 }
 
 class TransactionSummarySerde : WrapperSerde<TransactionSummary>(JsonSerializer(), JsonDeserializer(TransactionSummary::class.java))
@@ -41,6 +42,8 @@ class PurchasePatternsSerde :
 class RewardAccumulatorSerde :
 	WrapperSerde<RewardAccumulator>(JsonSerializer(), JsonDeserializer(RewardAccumulator::class.java))
 
+class StockPerformanceSerde:
+ WrapperSerde<StockPerformance>(JsonSerializer(), JsonDeserializer(StockPerformance::class.java))
 
 private class WrapperSerde<T> internal constructor(
 	private val serializer: JsonSerializer<T>,
