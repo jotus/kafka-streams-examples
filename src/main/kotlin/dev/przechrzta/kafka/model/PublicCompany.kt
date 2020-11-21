@@ -4,6 +4,7 @@ import java.text.DecimalFormat
 import java.util.concurrent.ThreadLocalRandom
 
 data class PublicCompany(
+	val volatility: Double,
 	val lastSold: Double,
 	val symbol: String,
 	val name: String,
@@ -11,7 +12,6 @@ data class PublicCompany(
 	val industry: String,
 	var price: Double = 0.0
 ){
-	val volatility = 0.1
 	val formatter = DecimalFormat("#0.00")
 
 	fun updateStockPrice(): Double {

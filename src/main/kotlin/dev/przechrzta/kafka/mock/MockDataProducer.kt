@@ -17,7 +17,6 @@ class MockDataProducer {
 	private val executorService = Executors.newFixedThreadPool(1)
 	private var callback: Callback? = null
 
-
 	fun init() {
 		if (producer == null) {
 			logger.info { "Initializing producer" }
@@ -30,6 +29,9 @@ class MockDataProducer {
 			producer = KafkaProducer<String, String>(properties)
 			callback = Callback { metadata: RecordMetadata?, exception: Exception? ->
 				exception?.printStackTrace()
+				exception?.let {
+					logger.info { "Exection $it" }
+				}
 			}
 			logger.info { "Producer initialized" }
 		}
@@ -48,13 +50,14 @@ class MockDataProducer {
 			init()
 			var counter = 0
 			while (counter++ < numIterations && keepRunning) {
-				val trx = DataGenerator.generateStockTransaction(companies, customers, 50)
+				val trx = DataGenerator.generateStockTransaction(companies, customers,50 )
 				trx.forEach { trx ->
 					val value = convertToString(trx)
 					val record = ProducerRecord<String, String>(STOCK_TRANSACTIONS_TOPIC, keyFunc(trx), value)
 					producer?.send(record)
+//					logger.info { "---- Sending: $record" }
 				}
-				logger.info { "Send next trx batch" }
+				logger.info { "---- Send next trx batch: $counter" }
 				sleepSomeTime()
 			}
 			logger.info { "Done trx generation!!!" }
@@ -82,5 +85,5 @@ class MockDataProducer {
 
 fun main() {
 	val generator = MockDataProducer()
-	generator.produceStockTrx(2, 5, 5, { it.customerId })
+	generator.produceStockTrx(50, 50, 25, { it.symbol })
 }

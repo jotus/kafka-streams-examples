@@ -52,7 +52,11 @@ object DataGenerator {
 				"Railroads",
 				"Major Pharmaceuticals"
 			)
-			val company = PublicCompany(lastSold, symbol, name, sector, industry)
+
+			val volatility =
+				faker.options().option("0.01", "0.02", "0.03", "0.04", "0.05", "0.06", "0.07", "0.08", "0.09")
+					.toDouble()
+			val company = PublicCompany(volatility, lastSold, symbol, name, sector, industry)
 			companies.add(company)
 		}
 
@@ -103,8 +107,8 @@ object DataGenerator {
 		val transactions = mutableListOf<StockTransaction>()
 		(1..num).forEach {
 			val numberShares = faker.number().numberBetween(100, 50000);
-			val company = companies.get(faker.number().numberBetween(0, companies.size))
-			val customer = customers.get(faker.number().numberBetween(0, customers.size))
+			val company = companies.get(faker.number().numberBetween(0, companies.size-1))
+			val customer = customers.get(faker.number().numberBetween(0, customers.size-1))
 			val timestamp = timestampGenerator.get()
 			val transaction = StockTransaction(
 				company.symbol,
@@ -123,8 +127,8 @@ object DataGenerator {
 }
 
 fun main() {
-	val  companies = DataGenerator.generatePublicCompanies(10)
-	val  customers = DataGenerator.generateCustomers(3)
+	val companies = DataGenerator.generatePublicCompanies(10)
+	val customers = DataGenerator.generateCustomers(3)
 	val trx = DataGenerator.generateStockTransaction(companies, customers, 10)
 	println(trx)
 }

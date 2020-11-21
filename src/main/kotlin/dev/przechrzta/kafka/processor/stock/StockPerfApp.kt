@@ -1,8 +1,8 @@
 package dev.przechrzta.kafka.processor.stock
 
 import dev.przechrzta.kafka.StreamsSerdes
+import dev.przechrzta.kafka.mock.MockDataProducer
 import dev.przechrzta.kafka.model.StockPerformance
-import dev.przechrzta.kafka.model.StockTransaction
 import dev.przechrzta.kafka.processor.util.KStreamPrinter
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -16,9 +16,9 @@ import org.apache.kafka.streams.state.Stores
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
- const val STOCK_TRX_TOPIC = "stock-transactions"
-fun main(){
-	val stringDes= Serdes.String().deserializer()
+const val STOCK_TRX_TOPIC = "stock-transactions"
+fun main() {
+	val stringDes = Serdes.String().deserializer()
 	val stringSer = Serdes.String().serializer()
 
 	val stockPerfSerde = StreamsSerdes.stockPerformanceSerde()
@@ -38,16 +38,24 @@ fun main(){
 //		.addProcessor("stocks-printer", KStreamPrinter<String, StockTransaction>("StockPerformance"), "stock-source")
 
 	topology.addSource("stock-source", stringDes, stockTrxDes, STOCK_TRX_TOPIC)
-		.addProcessor("stocks-processor",
-			ProcessorSupplier { StockPerformanceProcessor(stockStateStore, differentialThreshold)},
-			"stock-source")
+		.addProcessor(
+			"stocks-processor",
+			ProcessorSupplier { StockPerformanceProcessor(stockStateStore, differentialThreshold) },
+			"stock-source"
+		)
 		.addStateStore(storeBuilder, "stocks-processor")
 		.addSink("stocks-sink", "stock-performance", stringSer, stockPerfSerializer, "stocks-processor");
 
-	topology.addProcessor("stocks-printer", KStreamPrinter<String, StockPerformance>("StockPerformance"), "stocks-processor")
+	topology.addProcessor(
+		"stocks-printer",
+		KStreamPrinter<String, StockPerformance>("StockPerformance"),
+		"stocks-processor"
+	)
 
-	logger.info { "Log analysis app started..."}
+	logger.info { "Log analysis app started..." }
 	val kafkaStreams = KafkaStreams(topology, stockProps())
+	val generator = MockDataProducer()
+	generator.produceStockTrx(50, 50, 25, { it.symbol })
 	kafkaStreams.cleanUp()
 	kafkaStreams.start()
 
