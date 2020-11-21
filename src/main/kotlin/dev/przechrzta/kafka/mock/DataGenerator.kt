@@ -2,10 +2,18 @@ package dev.przechrzta.kafka.mock
 
 import com.github.javafaker.Faker
 import dev.przechrzta.kafka.model.PublicCompany
+import dev.przechrzta.kafka.model.StockTransaction
 import java.util.*
+import java.util.concurrent.TimeUnit
+import java.util.function.Supplier
+import java.util.regex.Pattern
 
 object DataGenerator {
-//	  val faker = Faker()
+	val dateFaker = Faker()
+	private var timestampGenerator: Supplier<Date> =
+		Supplier {
+			dateFaker.date().past(15, TimeUnit.MINUTES, Date())
+		}
 
 	fun generatePublicCompanies(num: Int): List<PublicCompany> {
 		val symbols = listOf("AEBB", "VABC", "ALBC", "EABC", "BWBC", "BNBC", "MASH", "BARX", "WNBC", "WKRP")
@@ -25,9 +33,9 @@ object DataGenerator {
 		val faker = Faker()
 		val random = Random()
 		val companies = mutableListOf<PublicCompany>()
-		(1..num).forEach{
+		(1..num).forEach {
 			val name: String = faker.company().name()
-			val stripped = name.replace("[^A-Za-z]".toRegex(), { ""})
+			val stripped = name.replace("[^A-Za-z]".toRegex(), { "" })
 			val start = random.nextInt(stripped.length - 4)
 			val symbol = stripped.subSequence(start, start + 4) as String
 
@@ -52,8 +60,73 @@ object DataGenerator {
 
 		return companies
 	}
+
+
+	private fun generateCreditCardNumbers(numberCards: Int): List<String> {
+		var counter = 0
+		val visaMasterCardAmex = Pattern.compile("(\\d{4}-){3}\\d{4}")
+		val creditCardNumbers: MutableList<String> =
+			ArrayList(numberCards)
+		val finance = Faker().finance()
+		while (counter < numberCards) {
+			val cardNumber = finance.creditCard()
+			if (visaMasterCardAmex.matcher(cardNumber).matches()) {
+				creditCardNumbers.add(cardNumber)
+				counter++
+			}
+		}
+		return creditCardNumbers
+	}
+
+
+	fun generateCustomers(num: Int): List<Customer> {
+
+		val faker = Faker()
+
+		val customers = mutableListOf<Customer>()
+		val creditCards = generateCreditCardNumbers(num)
+		(1..num).forEach {
+			val name = faker.name()
+			val customerId = faker.idNumber().valid()
+			val creditCard = creditCards.get(it - 1)
+			customers.add(Customer(name.firstName(), name.lastName(), customerId, creditCard))
+		}
+		return customers
+	}
+
+	fun generateStockTransaction(
+		companies: List<PublicCompany>,
+		customers: List<Customer>,
+		num: Int
+	): List<StockTransaction> {
+		val faker = Faker()
+		val transactions = mutableListOf<StockTransaction>()
+		(1..num).forEach {
+			val numberShares = faker.number().numberBetween(100, 50000);
+			val company = companies.get(faker.number().numberBetween(0, companies.size))
+			val customer = customers.get(faker.number().numberBetween(0, customers.size))
+			val timestamp = timestampGenerator.get()
+			val transaction = StockTransaction(
+				company.symbol,
+				company.sector,
+				company.industry,
+				customer.customerId,
+				numberShares,
+				company.updateStockPrice(),
+				timestamp,
+				true
+			)
+			transactions.add(transaction)
+		}
+		return transactions
+	}
 }
 
 fun main() {
-	println(DataGenerator.generatePublicCompanies(10))
+	val  companies = DataGenerator.generatePublicCompanies(10)
+	val  customers = DataGenerator.generateCustomers(3)
+	val trx = DataGenerator.generateStockTransaction(companies, customers, 10)
+	println(trx)
 }
+
+data class Customer(val firstName: String, val lastName: String, val customerId: String, val creditCardNum: String)
